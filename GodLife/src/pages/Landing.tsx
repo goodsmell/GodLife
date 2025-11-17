@@ -1,21 +1,64 @@
 import { useNavigate } from "react-router-dom";
 import { useGodLifeStore } from "../hooks/useGodLifeStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AskWakeUpTime from "../components/landing/AskWakeUpTime";
+import AskRunning from "../components/landing/AskRunning";
+import AskName from "../components/landing/AskName";
 
 export default function Landing() {
   const navigate = useNavigate();
-  const { state, setStartOfDay } = useGodLifeStore();
+  const { state, setStartOfDay, updateSettings } = useGodLifeStore();
 
   const initialHour = state.setting?.startOfDay?.hour ?? 7;
   const initialMinute = state.setting?.startOfDay?.minute ?? 0;
+  const initialGoalType = state.setting?.runningGoalType ?? "time";
+  const initialGoalValue = state.setting?.runningGoalValue ?? 0;
 
+  const [step, setStep] = useState<"name" | "wakeUpTime" | "runningGoal">(
+    "name",
+  );
   const [time, setTime] = useState(
     `${String(initialHour).padStart(2, "0")}:${String(initialMinute).padStart(2, "0")}`,
   );
+  const [goalType, setGoalType] = useState<"time" | "distance">(
+    initialGoalType,
+  );
+  const [goalValue, setGoalValue] = useState(initialGoalValue);
 
-  const handleSave = async () => {
+  useEffect(() => {
+    if (!state.setting) return;
+
+    const s = state.setting;
+
+    if (s.startOfDay) {
+      const h = String(s.startOfDay.hour).padStart(2, "0");
+      const m = String(s.startOfDay.minute).padStart(2, "0");
+      setTime(`${h}:${m}`);
+    }
+
+    if (s.runningGoalType) {
+      setGoalType(s.runningGoalType as "time" | "distance");
+    }
+
+    if (s.runningGoalValue != null) {
+      setGoalValue(s.runningGoalValue);
+    }
+  }, [state.setting]);
+
+  const handleSaveName = async (name: string) => {
+    await updateSettings({ displayName: name });
+    setStep("wakeUpTime");
+  };
+  const handleSaveWakeUpTime = async () => {
     const [h, m] = time.split(":").map(Number);
     await setStartOfDay({ hour: h, minute: m });
+    setStep("runningGoal");
+  };
+  const handleSaveRunningGoal = async () => {
+    await updateSettings({
+      runningGoalType: goalType,
+      runningGoalValue: goalValue,
+    });
     navigate("/today");
   };
 
@@ -29,25 +72,23 @@ export default function Landing() {
 
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-slate-100 px-6">
-      <h1 className="text-center text-2xl font-bold leading-tight text-slate-600">
-        당신의 하루는 <br /> 몇 시에 시작되나요?
-      </h1>
-
-      <div className="flex gap-2">
-        <input
-          type="time"
-          value={time}
-          onChange={(e) => setTime(e.target.value)}
-          className="w-40 cursor-pointer rounded-lg border border-slate-300 bg-white px-3 py-2 text-lg shadow-sm focus:border-black focus:ring-1 focus:ring-black"
+      {step === "name" && <AskName onConfirm={handleSaveName} />}
+      {step === "wakeUpTime" && (
+        <AskWakeUpTime
+          onConfirm={handleSaveWakeUpTime}
+          time={time}
+          setTime={setTime}
         />
-
-        <button
-          onClick={handleSave}
-          className="rounded-lg bg-gray-300 px-5 text-sm font-medium text-white shadow hover:bg-gray-400"
-        >
-          저장
-        </button>
-      </div>
+      )}
+      {step === "runningGoal" && (
+        <AskRunning
+          onConfirm={handleSaveRunningGoal}
+          goalType={goalType}
+          setGoalType={setGoalType}
+          goalValue={goalValue}
+          setGoalValue={setGoalValue}
+        />
+      )}
     </main>
   );
 }

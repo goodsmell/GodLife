@@ -4,9 +4,10 @@ import {
   getAllLogs,
   getLogByDate,
   getSetting,
-  updateStartOfDay,
+  updateSetting,
   upsertLog,
 } from "../db/godlifeRepository";
+import { resetDB } from "../db/godlifeDB";
 
 type GodLifeState = {
   setting: Setting | null;
@@ -31,10 +32,18 @@ export function useGodLifeStore() {
   }, []);
 
   const setStartOfDay = async (startOfDay: StartOfDay) => {
-    await updateStartOfDay(startOfDay);
+    await updateSetting({ startOfDay });
     setState((prev) =>
       prev.setting
         ? { ...prev, setting: { ...prev.setting, startOfDay } }
+        : prev,
+    );
+  };
+  const updateSettings = async (partial: Partial<Omit<Setting, "id">>) => {
+    await updateSetting(partial);
+    setState((prev) =>
+      prev.setting
+        ? { ...prev, setting: { ...prev.setting, ...partial } }
         : prev,
     );
   };
@@ -49,10 +58,22 @@ export function useGodLifeStore() {
     return getLogByDate(date);
   };
 
+  const resetAll = async () => {
+    await resetDB();
+
+    setState({
+      setting: null,
+      logs: [],
+      loading: false,
+    });
+  };
+
   return {
     state,
     setStartOfDay,
+    updateSettings,
     saveDayLog,
     getTodayLog,
+    resetAll,
   };
 }

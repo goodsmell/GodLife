@@ -11,6 +11,9 @@ export type DayLog = {
 };
 
 export type Setting = {
-  id: string; // 'global' 같은 고정 키
+  id: string; // 'global'
   startOfDay: StartOfDay | null;
+  displayName: string | null; // 이름
+  runningGoalType: "time" | "distance" | null;
+  runningGoalValue: number | null;
 };

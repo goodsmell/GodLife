@@ -1,5 +1,5 @@
 import { db } from "./godlifeDB";
-import type { DayLog, Setting, StartOfDay } from "../types/setting";
+import type { DayLog, Setting } from "../types/setting";
 
 const GLOBAL_SETTING_ID = "global";
 
@@ -11,16 +11,16 @@ export async function getSetting(): Promise<Setting> {
   const defaultSetting: Setting = {
     id: GLOBAL_SETTING_ID,
     startOfDay: null,
+    displayName: null,
+    runningGoalType: null,
+    runningGoalValue: null,
   };
   await db.settings.put(defaultSetting);
   return defaultSetting;
 }
 
-export async function updateStartOfDay(startOfDay: StartOfDay) {
-  await db.settings.put({
-    id: GLOBAL_SETTING_ID,
-    startOfDay,
-  });
+export async function updateSetting(partial: Partial<Omit<Setting, "id">>) {
+  await db.settings.update(GLOBAL_SETTING_ID, partial);
 }
 
 export async function getLogByDate(date: string): Promise<DayLog | undefined> {
