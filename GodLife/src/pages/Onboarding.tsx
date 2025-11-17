@@ -5,7 +5,7 @@ import AskWakeUpTime from "../components/landing/AskWakeUpTime";
 import AskRunning from "../components/landing/AskRunning";
 import AskName from "../components/landing/AskName";
 
-export default function Landing() {
+export default function Onboarding() {
   const navigate = useNavigate();
   const { state, setStartOfDay, updateSettings } = useGodLifeStore();
 
