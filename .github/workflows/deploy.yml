@@ -27,17 +27,20 @@ jobs:
         with:
           node-version: 22
           cache: 'npm'
+          cache-dependency-path: GodLife/package-lock.json
 
       - name: Install dependencies
         run: npm ci
+        working-directory: GodLife
 
       - name: Build
         run: npm run build
+        working-directory: GodLife
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./dist
+          path: GodLife/dist
 
   deploy:
     runs-on: ubuntu-latest
