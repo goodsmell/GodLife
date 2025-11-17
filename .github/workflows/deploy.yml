@@ -5,6 +5,9 @@ on:
     branches:
       - main
 
+env:
+  ROLLUP_USE_NODE_JS_IMPLEMENTATION: 1
+
 permissions:
   contents: read
   pages: write
@@ -30,16 +33,12 @@ jobs:
           cache-dependency-path: GodLife/package-lock.json
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
         working-directory: GodLife
-        env:
-          ROLLUP_USE_NODE_JS_IMPLEMENTATION: 1 
 
       - name: Build
         run: npm run build
         working-directory: GodLife
-        env:
-          ROLLUP_USE_NODE_JS_IMPLEMENTATION: 1 
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
