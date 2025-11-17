@@ -18,10 +18,10 @@ export class GodLifeDB extends Dexie {
   }
 }
 
+// 싱글톤 인스턴스
+export const db = new GodLifeDB();
+
 export async function resetDB() {
   await db.delete(); // 전체 DB 삭제
   await db.open(); // 다시 초기화해서 오류 방지
 }
-
-// 싱글톤 인스턴스
-export const db = new GodLifeDB();
