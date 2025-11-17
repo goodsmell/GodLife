@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Onboarding from "./pages/Onboarding";
 import HomeLayout from "./layout/HomeLayout";
 import History from "./pages/History";
-import Analysis from "./pages/Analysis";
+import Analytics from "./pages/Analytics";
 import Setting from "./pages/Setting";
 import Today from "./pages/Today";
 import ProtectedLanding from "./routes/ProtectedLanding";
@@ -17,7 +17,7 @@ function App() {
         <Route element={<HomeLayout />}>
           <Route path="/today" element={<Today />} />
           <Route path="/history" element={<History />} />
-          <Route path="/analysis" element={<Analysis />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="/settings" element={<Setting />} />
         </Route>
       </Route>

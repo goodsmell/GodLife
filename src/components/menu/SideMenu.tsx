@@ -12,7 +12,7 @@ export default function SideMenu({ isOpen, onToggle }: SideMenuProps) {
   const menu = [
     { path: "/today", label: "오늘의 갓생", icon: "📅" },
     { path: "/history", label: "기록", icon: "📖" },
-    { path: "/analysis", label: "분석", icon: "📊" },
+    { path: "/analytics", label: "분석", icon: "📊" },
     { path: "/settings", label: "설정", icon: "⚙️" },
   ];
 
