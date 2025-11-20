@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useGodLifeStore } from "../hooks/useGodLifeStore";
-import type { DayLog } from "../types/setting";
+import type { DayLog, TodoItem } from "../types/setting";
 import { fromDateKey, formatYearMonthLabel } from "../utils/date";
 import { parseTimeToMinutes } from "../utils/timeUtils";
 
@@ -131,6 +131,26 @@ export default function MonthlyStatsPage() {
     return { daysWithDiary, totalDays, percent };
   }, [monthLogs, daysInMonth]);
 
+  // =============================
+  // 투두 수 / 완료 / 미완료
+  // =============================
+  const todoStats = useMemo(() => {
+    let total = 0;
+    let done = 0;
+
+    monthLogs.forEach((log) => {
+      (log.todos ?? []).forEach((t: TodoItem) => {
+        total += 1;
+        if (t.done) done += 1;
+      });
+    });
+
+    const undone = total - done;
+    const donePercent = total === 0 ? 0 : Math.round((done / total) * 100);
+
+    return { total, done, undone, donePercent };
+  }, [monthLogs]);
+
   if (loading) {
     return (
       <main className="flex min-h-screen flex-col items-center bg-slate-100 px-4 py-6">
@@ -242,6 +262,8 @@ export default function MonthlyStatsPage() {
             <span>{daysInMonth}일</span>
           </div>
         </section>
+
+        {/* 일기 / 투두 요약 카드 */}
         <section className="grid grid-cols-2 gap-3">
           {/* 일기 */}
           <div className="rounded-xl bg-white p-3 shadow-sm">
@@ -253,8 +275,26 @@ export default function MonthlyStatsPage() {
               {diaryStats.totalDays}일 중 {diaryStats.percent}% 작성
             </p>
           </div>
+
+          {/* 투두 */}
+          <div className="rounded-xl bg-white p-3 shadow-sm">
+            <p className="text-xs font-semibold text-gray-700">할 일 완료</p>
+            <p className="mt-1 text-lg font-bold text-emerald-600">
+              {todoStats.done}개
+            </p>
+            <p className="text-[11px] text-gray-500">
+              전체 {todoStats.total}개 중 {todoStats.donePercent}% 완료
+            </p>
+            {todoStats.total > 0 && (
+              <p className="mt-1 text-[11px] text-gray-400">
+                미완료 {todoStats.undone}개
+              </p>
+            )}
+          </div>
         </section>
       </div>
     </main>
   );
 }
+
+
