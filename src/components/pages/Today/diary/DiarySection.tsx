@@ -1,10 +1,10 @@
-import { type ChangeEvent } from "react";
+import { type ChangeEvent, useEffect, useState } from "react";
 import { useTodayGoalLog } from "../../../../hooks/useTodayGoalLog";
 import { useDayLog } from "../../../../hooks/useDayLog";
 
 type DiarySectionProps = {
-  dateKey?: string; // 없으면 오늘 모드
-  readOnly?: boolean; // true이면 기록 보기 모드
+  dateKey?: string;
+  readOnly?: boolean; 
 };
 
 export default function DiarySection({
@@ -20,13 +20,19 @@ export default function DiarySection({
     removeDiaryImage,
   } = dateKey ? useDayLog(dateKey, { readOnly }) : useTodayGoalLog();
 
+  const [draft, setDraft] = useState(diary);
+
+  useEffect(() => {
+    setDraft(diary);
+  }, [diary]);
+
   if (loading) return null;
 
   const hasDiary = diary.trim().length > 0;
   const hasImages = diaryImages.length > 0;
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
-    if (readOnly) return; // 읽기 전용이면 막기
+    if (readOnly) return;
 
     const files = e.target.files;
     if (!files) return;
@@ -50,7 +56,7 @@ export default function DiarySection({
         오늘의 일기
       </h3>
 
-      {/* 본문 영역 */}
+      {/* 🔹 본문 영역 */}
       {readOnly ? (
         hasDiary ? (
           <div className="mb-3 w-full rounded-sm border border-gray-300 px-3 py-2 text-sm leading-relaxed">
@@ -63,8 +69,9 @@ export default function DiarySection({
         )
       ) : (
         <textarea
-          value={diary}
-          onChange={(e) => setDiary(e.target.value)}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)} 
+          onBlur={() => setDiary(draft)} 
           placeholder="오늘 있었던 일을 자유롭게 적어보세요."
           className="mb-3 h-32 w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm leading-relaxed"
         />

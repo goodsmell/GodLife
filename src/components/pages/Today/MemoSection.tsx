@@ -12,11 +12,27 @@ export default function MemoSection({
 }: MemoSectionProps) {
   const store = dateKey ? useDayLog(dateKey, { readOnly }) : useTodayGoalLog();
 
-  const { loading, memos, addMemo, updateMemo, removeMemo } = store;
+  const { loading, memos = [], addMemo, updateMemo, removeMemo } = store;
 
   if (loading) return null;
 
   const reachedLimit = memos.length >= 3;
+
+  const handleAddMemo = () => {
+    if (readOnly) return;
+    if (reachedLimit) return;
+    addMemo();
+  };
+
+  const handleBlurMemo = (id: string, value: string) => {
+    if (readOnly) return;
+    updateMemo(id, value);
+  };
+
+  const handleRemoveMemo = (id: string) => {
+    if (readOnly) return;
+    removeMemo(id);
+  };
 
   return (
     <section className="w-full rounded-xl bg-white p-4 shadow-sm">
@@ -25,7 +41,7 @@ export default function MemoSection({
         {!readOnly && (
           <button
             type="button"
-            onClick={addMemo}
+            onClick={handleAddMemo}
             disabled={reachedLimit}
             className={`rounded-lg px-2 py-1 text-xs font-medium ${
               reachedLimit
@@ -48,14 +64,18 @@ export default function MemoSection({
         ))}
 
       <div className="mt-2 grid grid-cols-3 gap-2">
-        {memos.map((memo, index) => (
+        {memos.map((memo: { id: string; text: string }, index: number) => (
           <div
-            key={memo.id}
-            className={`relative flex h-24 flex-col rounded-lg bg-amber-100 p-2 text-xs shadow ${index === 0 ? "-rotate-1" : ""} ${index === 1 ? "rotate-1" : ""} ${index === 2 ? "-rotate-2" : ""} `}
+            key={memo.id ?? index}
+            className={`relative flex h-24 flex-col rounded-lg bg-amber-100 p-2 text-xs shadow ${
+              index === 0 ? "-rotate-1" : ""
+            } ${index === 1 ? "rotate-1" : ""} ${
+              index === 2 ? "-rotate-2" : ""
+            }`}
           >
             <textarea
-              value={memo.text}
-              onChange={(e) => !readOnly && updateMemo(memo.id, e.target.value)}
+              defaultValue={memo.text}
+              onBlur={(e) => handleBlurMemo(memo.id, e.target.value)}
               readOnly={readOnly}
               placeholder="메모..."
               className="h-full w-full resize-none bg-transparent text-[11px] leading-snug text-gray-800 outline-none"
@@ -63,7 +83,7 @@ export default function MemoSection({
             {!readOnly && (
               <button
                 type="button"
-                onClick={() => removeMemo(memo.id)}
+                onClick={() => handleRemoveMemo(memo.id)}
                 className="absolute right-1 top-1 rounded-full bg-black/40 px-1 text-[10px] text-white"
               >
                 ✕
