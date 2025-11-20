@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { DayLog, StartOfDay, TodoItem } from "../types/setting";
+import type { DayLog, MemoItem, StartOfDay, TodoItem } from "../types/setting";
 import { useGodLifeStore } from "./useGodLifeStore"; // 네가 만든 훅 경로에 맞게 수정
 
 function formatDate(date: Date): string {
@@ -109,6 +109,31 @@ export function useTodayGoalLog() {
     updateLog({ diaryImages: next });
   };
 
+  const memos: MemoItem[] = log?.memos ?? [];
+
+  const setMemos = (next: MemoItem[]) => {
+    updateLog({ memos: next });
+  };
+
+  const addMemo = () => {
+    if (memos.length >= 3) return; // 최대 3장
+    const newMemo: MemoItem = {
+      id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()),
+      text: "",
+    };
+    setMemos([...memos, newMemo]);
+  };
+
+  const updateMemo = (id: string, text: string) => {
+    const next = memos.map((m) => (m.id === id ? { ...m, text } : m));
+    setMemos(next);
+  };
+
+  const removeMemo = (id: string) => {
+    const next = memos.filter((m) => m.id !== id);
+    setMemos(next);
+  };
+
   return {
     loading: loading || globalLoading || !date || !log,
     date: date ?? "",
@@ -131,5 +156,10 @@ export function useTodayGoalLog() {
     diaryImages,
     addDiaryImage,
     removeDiaryImage,
+
+    memos,
+    addMemo,
+    updateMemo,
+    removeMemo,
   };
 }

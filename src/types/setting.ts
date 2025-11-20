@@ -9,6 +9,11 @@ export type TodoItem = {
   done: boolean;
 };
 
+export type MemoItem = {
+  id: string;
+  text: string;
+};
+
 export type DayLog = {
   id?: number;
   date: string; // '2025-11-17'
@@ -21,6 +26,8 @@ export type DayLog = {
 
   diary?: string;
   diaryImages?: string[]; // data URL (base64)로 저장
+
+  memos?: MemoItem[];
 };
 
 export type Setting = {

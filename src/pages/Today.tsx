@@ -3,7 +3,7 @@ import QuoteOfTheDay from "../components/pages/Today/QuoteOfTheDay";
 import GoalSection from "../components/pages/Today/goals/GoalSection";
 import TodoSection from "../components/pages/Today/todo/TodoSection";
 import DiarySection from "../components/pages/Today/diary/DiarySection";
-
+import MemoSection from "../components/pages/Today/MemoSection";
 export default function Today() {
   const todoScore = 0;
   return (
@@ -18,6 +18,7 @@ export default function Today() {
       />
       <GoalSection todoScore={todoScore} />
       <TodoSection />
+      <MemoSection />
       <DiarySection />
     </main>
   );
