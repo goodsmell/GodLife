@@ -3,6 +3,7 @@ type RunningCardProps = {
   goalValue: number; // 분 or km
   runningValue: number | null; // 분 or km
   onChangeRunningValue: (value: number | null) => void;
+  readOnly?: boolean;
 };
 
 export default function RunningCard({
@@ -10,6 +11,7 @@ export default function RunningCard({
   goalValue,
   runningValue,
   onChangeRunningValue,
+  readOnly = false,
 }: RunningCardProps) {
   const hasInput = runningValue !== null && runningValue !== undefined;
   const isAchieved = hasInput && runningValue! >= goalValue;
@@ -21,9 +23,9 @@ export default function RunningCard({
     label = "러닝 시간";
   }
 
-  let statusText = "입력 전";
+  let statusText = "입력 안함";
   if (hasInput) {
-    statusText = isAchieved ? "목표 달성 🏃‍♀️" : "조금만 더!";
+    statusText = isAchieved ? "성공 🏃‍♀️" : "조금만 더!";
   }
 
   const statusColorClass = getStatusColorClass(hasInput, isAchieved);
@@ -42,23 +44,33 @@ export default function RunningCard({
     <section className="w-full rounded-xl bg-white p-4 shadow-sm">
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-base font-semibold text-gray-800">{label}</h3>
-        <span className="text-xs text-gray-500">
-          오늘 목표: {goalValue}
-          {unitLabel}
-        </span>
+        {!readOnly && (
+          <span className="text-xs text-gray-500">
+            오늘 목표: {goalValue}
+            {unitLabel}
+          </span>
+        )}
       </div>
 
       <div className="flex flex-col items-center gap-3 lg:flex-row">
         <div className="flex items-center gap-2">
-          <input
-            type="number"
-            min={0}
-            step={goalType === "time" ? 5 : 0.1}
-            value={runningValue ?? ""}
-            onChange={(e) => handleChange(e.target.value)}
-            className="w-24 rounded-lg border border-gray-300 px-2 py-1 text-sm"
-          />
-          <span className="text-sm text-gray-600">{unitLabel}</span>
+          {!readOnly && (
+            <input
+              type="number"
+              min={0}
+              step={goalType === "time" ? 5 : 0.1}
+              value={runningValue ?? ""}
+              onChange={(e) => handleChange(e.target.value)}
+              className="w-24 rounded-lg border border-gray-300 px-2 py-1 text-sm"
+            />
+          )}
+          {readOnly && (
+            <span className="text-sm text-gray-600">{runningValue ?? ""}</span>
+          )}
+
+          <span className="text-sm text-gray-600">
+            {runningValue ? unitLabel : ""}
+          </span>
         </div>
 
         <span

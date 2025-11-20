@@ -1,6 +1,7 @@
 import { useEffect, useMemo } from "react";
 import { useGodLifeStore } from "../../../../hooks/useGodLifeStore";
 import { useTodayGoalLog } from "../../../../hooks/useTodayGoalLog";
+import { useDayLog } from "../../../../hooks/useDayLog";
 import WakeupCard from "./WakeupCard";
 import RunningCard from "./RunningCard";
 import GoalProgress from "./GoalProgress";
@@ -8,6 +9,8 @@ import { parseTimeToMinutes } from "../../../../utils/timeUtils";
 
 type GoalSectionProps = {
   todoScore?: number;
+  dateKey?: string;
+  readOnly?: boolean;
 };
 
 function formatTimeFromStartOfDay(
@@ -20,9 +23,17 @@ function formatTimeFromStartOfDay(
   return `${h}:${m}`;
 }
 
-export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
+export default function GoalSection({
+  todoScore = 0,
+  dateKey,
+  readOnly = false,
+}: GoalSectionProps) {
   const { state } = useGodLifeStore();
   const { setting, loading: globalLoading } = state;
+
+  const store = dateKey
+    ? useDayLog(dateKey, { readOnly })
+    : useTodayGoalLog();
 
   const {
     loading: todayLoading,
@@ -32,7 +43,7 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
     setRunningValue,
     score,
     setScore,
-  } = useTodayGoalLog();
+  } = store;
 
   const isLoading = globalLoading || todayLoading;
 
@@ -77,11 +88,12 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
 
   useEffect(() => {
     if (isLoading) return;
+    if (readOnly) return; 
 
     if (score !== totalPercent) {
       setScore(totalPercent);
     }
-  }, [isLoading, score, totalPercent, setScore]);
+  }, [isLoading, readOnly, score, totalPercent, setScore]);
 
   if (isLoading) {
     return (
@@ -98,20 +110,23 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
       <WakeupCard
         goalTime={wakeupGoalTime}
         wakeupTime={wakeupTime}
-        onChangeWakeupTime={setWakeupTime}
+        onChangeWakeupTime={readOnly ? () => {} : setWakeupTime}
+        readOnly={readOnly}
       />
 
       <RunningCard
         goalType={runningGoalType}
         goalValue={runningGoalValue}
         runningValue={runningValue}
-        onChangeRunningValue={setRunningValue}
+        onChangeRunningValue={readOnly ? () => {} : setRunningValue}
+        readOnly={readOnly}
       />
 
       <GoalProgress
         wakeupScore={wakeupScore}
         runningScore={runningScore}
         todoScore={todoScore}
+        readOnly={readOnly}
       />
     </section>
   );
