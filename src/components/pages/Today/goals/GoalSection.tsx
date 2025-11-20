@@ -1,12 +1,12 @@
 import { useEffect, useMemo } from "react";
-import WakeupCard from "./WakeupCard";
-
 import { useGodLifeStore } from "../../../../hooks/useGodLifeStore";
 import { useTodayGoalLog } from "../../../../hooks/useTodayGoalLog";
+import WakeupCard from "./WakeupCard";
+import RunningCard from "./RunningCard";
 import { parseTimeToMinutes } from "../../../../utils/timeUtils";
 
 type GoalSectionProps = {
-  todoScore?: number;
+  todoScore?: number; 
 };
 
 function formatTimeFromStartOfDay(
@@ -28,6 +28,7 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
     wakeupTime,
     setWakeupTime,
     runningValue,
+    setRunningValue,
     score,
     setScore,
   } = useTodayGoalLog();
@@ -39,6 +40,7 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
     "07:00",
   );
 
+  const runningGoalType = setting?.runningGoalType ?? "distance";
   const runningGoalValue = setting?.runningGoalValue ?? 3;
 
   const wakeupScore = useMemo(() => {
@@ -97,6 +99,14 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
         wakeupTime={wakeupTime}
         onChangeWakeupTime={setWakeupTime}
       />
+
+      <RunningCard
+        goalType={runningGoalType}
+        goalValue={runningGoalValue}
+        runningValue={runningValue}
+        onChangeRunningValue={setRunningValue}
+      />
+
     </section>
   );
 }
