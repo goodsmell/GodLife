@@ -62,9 +62,8 @@ export default function QuoteOfTheDay({
   const quote = quoteList[index];
 
   return (
-    <section className="w-full rounded-xl bg-white p-4 text-center shadow-sm">
-      <p className="text-sm text-gray-500">오늘의 명언</p>
-      <h3 className="mt-1 text-base font-medium leading-relaxed text-gray-800">
+    <section className="w-full text-center shadow-sm">
+      <h3 className="text-base font-thin leading-relaxed text-gray-500">
         “{quote}”
       </h3>
     </section>
