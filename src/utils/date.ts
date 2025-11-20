@@ -20,3 +20,7 @@ export function formatDateLabel(key: string): string {
   const w = WEEKDAY[date.getDay()];
   return `${y}년 ${m}월 ${d}일 ${w}요일`;
 }
+
+export function formatYearMonthLabel(year: number, monthIndex: number): string {
+    return `${year}년 ${monthIndex + 1}월`;
+  }
