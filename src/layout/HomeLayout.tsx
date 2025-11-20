@@ -13,10 +13,7 @@ export default function HomeLayout() {
       <SideMenu isOpen={isSidebarOpen} onToggle={toggleSidebar} />
 
       {isSidebarOpen && (
-        <div
-          className="fixed inset-0 z-10 bg-black/30 md:hidden"
-          onClick={toggleSidebar}
-        />
+        <div className="fixed inset-0 z-10" onClick={toggleSidebar} />
       )}
 
       <main className="relative z-0 flex-1 p-6">

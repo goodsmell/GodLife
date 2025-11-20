@@ -33,7 +33,9 @@ export default function DiarySection() {
 
   return (
     <section className="w-full rounded-xl bg-white p-4 shadow-sm">
-      <h3 className="mb-2 text-base font-semibold text-gray-800">오늘의 일기</h3>
+      <h3 className="mb-2 text-base font-semibold text-gray-800">
+        오늘의 일기
+      </h3>
 
       {/* 일기 입력 */}
       <textarea
@@ -80,7 +82,9 @@ export default function DiarySection() {
       )}
 
       {diaryImages.length === 0 && (
-        <p className="text-xs text-gray-400">오늘을 기록하고 싶은 사진을 올려보세요.</p>
+        <p className="text-xs text-gray-400">
+          오늘을 기록하고 싶은 사진을 올려보세요.
+        </p>
       )}
     </section>
   );

@@ -36,12 +36,6 @@ export default function GoalProgress({
           style={{ width: barWidth }}
         />
       </div>
-
-      <div className="mt-1 flex justify-between text-xs text-gray-500">
-        <span>기상</span>
-        <span>러닝</span>
-        <span>투두</span>
-      </div>
     </section>
   );
 }

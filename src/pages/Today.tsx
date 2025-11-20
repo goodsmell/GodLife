@@ -7,7 +7,7 @@ import MemoSection from "../components/pages/Today/MemoSection";
 export default function Today() {
   const todoScore = 0;
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center bg-slate-100 px-4">
+    <main className="flex h-full flex-col items-center border bg-slate-100 px-4 py-4">
       {/*  오늘 날짜 + 요일 표시 */}
       <TodayDate />
       {/*  랜덤/고정 명언 */}
@@ -16,10 +16,16 @@ export default function Today() {
         runningPercent={0.8}
         yesterdayProgress={0.3}
       />
-      <GoalSection todoScore={todoScore} />
-      <TodoSection />
-      <MemoSection />
-      <DiarySection />
+      <section className="mt-4 flex w-full flex-col gap-5">
+        <GoalSection todoScore={todoScore} />
+        <section className="grid grid-cols-2 gap-3">
+          <TodoSection />
+          <section className="flex flex-col gap-3">
+            <MemoSection />
+            <DiarySection />
+          </section>
+        </section>
+      </section>
     </main>
   );
 }

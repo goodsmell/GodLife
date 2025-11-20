@@ -62,7 +62,7 @@ export default function QuoteOfTheDay({
   const quote = quoteList[index];
 
   return (
-    <section className="w-full text-center shadow-sm">
+    <section className="w-full text-center">
       <h3 className="text-base font-thin leading-relaxed text-gray-500">
         “{quote}”
       </h3>

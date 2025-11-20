@@ -7,7 +7,7 @@ import GoalProgress from "./GoalProgress";
 import { parseTimeToMinutes } from "../../../../utils/timeUtils";
 
 type GoalSectionProps = {
-  todoScore?: number; 
+  todoScore?: number;
 };
 
 function formatTimeFromStartOfDay(
@@ -94,7 +94,7 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
   }
 
   return (
-    <section className="w-full space-y-3">
+    <section className="grid w-full grid-cols-3 gap-3">
       <WakeupCard
         goalTime={wakeupGoalTime}
         wakeupTime={wakeupTime}
@@ -116,4 +116,3 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
     </section>
   );
 }
-

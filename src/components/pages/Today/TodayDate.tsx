@@ -9,7 +9,7 @@ export default function TodayDate() {
   const weekday = weekdayNames[now.getDay()];
 
   return (
-    <section className="mt-2 w-full text-center">
+    <section className="w-full text-center">
       <h2 className="text-xl font-semibold text-gray-800">
         {year}년 {month}월 {date}일 {weekday}요일
       </h2>
