@@ -91,6 +91,24 @@ export function useTodayGoalLog() {
     updateLog({ todos: next });
   };
 
+  const diary = log?.diary ?? "";
+  const setDiary = (text: string) => {
+    const trimmed = text.trim();
+    updateLog({ diary: trimmed || undefined });
+  };
+
+  const diaryImages = log?.diaryImages ?? [];
+
+  const addDiaryImage = (img: string) => {
+    const next = [...diaryImages, img].slice(0, 10); // 최대 10장 제한
+    updateLog({ diaryImages: next });
+  };
+
+  const removeDiaryImage = (index: number) => {
+    const next = diaryImages.filter((_, i) => i !== index);
+    updateLog({ diaryImages: next });
+  };
+
   return {
     loading: loading || globalLoading || !date || !log,
     date: date ?? "",
@@ -107,5 +125,11 @@ export function useTodayGoalLog() {
     setScore: (score: number) => updateLog({ score }),
     todos,
     setTodos,
+
+    diary,
+    setDiary,
+    diaryImages,
+    addDiaryImage,
+    removeDiaryImage,
   };
 }

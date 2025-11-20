@@ -18,6 +18,9 @@ export type DayLog = {
   wakeupTime?: string;
   runningValue?: number;
   todos?: TodoItem[];
+
+  diary?: string;
+  diaryImages?: string[]; // data URL (base64)로 저장
 };
 
 export type Setting = {
