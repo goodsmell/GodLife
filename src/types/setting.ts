@@ -6,8 +6,10 @@ export type StartOfDay = {
 export type DayLog = {
   id?: number; // auto-increment
   date: string; // '2025-11-17'
-  score: number; // 0~100 or 0~10
+  score: number; // 0~100
   notes?: string;
+  wakeupTime?: string; // 07:30
+  runningValue?: number; // runningGoalType에 따라: 시간(분) 또는 거리(km)
 };
 
 export type Setting = {
