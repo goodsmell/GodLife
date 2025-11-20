@@ -3,13 +3,21 @@ export type StartOfDay = {
   minute: number; // 0-59
 };
 
+export type TodoItem = {
+  id: string;
+  text: string;
+  done: boolean;
+};
+
 export type DayLog = {
-  id?: number; // auto-increment
+  id?: number;
   date: string; // '2025-11-17'
   score: number; // 0~100
   notes?: string;
-  wakeupTime?: string; // 07:30
-  runningValue?: number; // runningGoalType에 따라: 시간(분) 또는 거리(km)
+
+  wakeupTime?: string;
+  runningValue?: number;
+  todos?: TodoItem[];
 };
 
 export type Setting = {

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { DayLog, StartOfDay } from "../types/setting";
+import type { DayLog, StartOfDay, TodoItem } from "../types/setting";
 import { useGodLifeStore } from "./useGodLifeStore"; // 네가 만든 훅 경로에 맞게 수정
 
 function formatDate(date: Date): string {
@@ -85,6 +85,12 @@ export function useTodayGoalLog() {
     setLog(updated);
   };
 
+  const todos: TodoItem[] = log?.todos ?? [];
+
+  const setTodos = (next: TodoItem[]) => {
+    updateLog({ todos: next });
+  };
+
   return {
     loading: loading || globalLoading || !date || !log,
     date: date ?? "",
@@ -99,5 +105,7 @@ export function useTodayGoalLog() {
 
     score: log?.score ?? 0,
     setScore: (score: number) => updateLog({ score }),
+    todos,
+    setTodos,
   };
 }
