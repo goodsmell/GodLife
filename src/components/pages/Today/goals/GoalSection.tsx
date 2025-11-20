@@ -3,6 +3,7 @@ import { useGodLifeStore } from "../../../../hooks/useGodLifeStore";
 import { useTodayGoalLog } from "../../../../hooks/useTodayGoalLog";
 import WakeupCard from "./WakeupCard";
 import RunningCard from "./RunningCard";
+import GoalProgress from "./GoalProgress";
 import { parseTimeToMinutes } from "../../../../utils/timeUtils";
 
 type GoalSectionProps = {
@@ -107,6 +108,12 @@ export default function GoalSection({ todoScore = 0 }: GoalSectionProps) {
         onChangeRunningValue={setRunningValue}
       />
 
+      <GoalProgress
+        wakeupScore={wakeupScore}
+        runningScore={runningScore}
+        todoScore={todoScore}
+      />
     </section>
   );
 }
+
