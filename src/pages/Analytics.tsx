@@ -92,6 +92,30 @@ export default function MonthlyStatsPage() {
     return { data: transformed, max };
   }, [monthLogs, daysInMonth]);
 
+  // =============================
+  // 러닝 그래프용 데이터
+  // =============================
+  const runningSeries = useMemo(() => {
+    // day: 1~daysInMonth 까지 채우기
+    const arr = Array.from({ length: daysInMonth }, (_, i) => ({
+      day: i + 1,
+      value: 0,
+    }));
+
+    monthLogs.forEach((log) => {
+      if (typeof log.runningValue === "number") {
+        const date = fromDateKey(log.date);
+        const day = date.getDate();
+        const index = day - 1;
+        // 같은 날 여러 번 저장되어도 합산
+        arr[index].value += log.runningValue;
+      }
+    });
+
+    const max = arr.reduce((m, d) => (d.value > m ? d.value : m), 0);
+    return { data: arr, max };
+  }, [monthLogs, daysInMonth]);
+
   if (loading) {
     return (
       <main className="flex min-h-screen flex-col items-center bg-slate-100 px-4 py-6">
@@ -163,6 +187,44 @@ export default function MonthlyStatsPage() {
           <div className="mt-1 flex justify-between text-[10px] text-gray-400">
             <span>일찍</span>
             <span>늦게</span>
+          </div>
+        </section>
+
+        {/* 러닝 그래프 */}
+        <section className="w-full rounded-xl bg-white p-4 shadow-sm">
+          <h3 className="mb-2 text-sm font-semibold text-gray-800">
+            러닝 기록 (일별)
+          </h3>
+          {runningSeries.max === 0 ? (
+            <p className="text-xs text-gray-400">
+              이 달에는 러닝 기록이 없어요.
+            </p>
+          ) : (
+            <div className="flex h-32 items-end gap-[2px]">
+              {runningSeries.data.map((d) => {
+                const heightPercent =
+                  runningSeries.max === 0
+                    ? 0
+                    : (d.value / runningSeries.max) * 100;
+
+                return (
+                  <div
+                    key={d.day}
+                    className="flex-1"
+                    aria-label={`${d.day}일: ${d.value}`}
+                  >
+                    <div
+                      className="mx-[1px] h-full w-full rounded-t bg-indigo-400"
+                      style={{ height: `${heightPercent}%` }}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          )}
+          <div className="mt-1 flex justify-between text-[10px] text-gray-400">
+            <span>1일</span>
+            <span>{daysInMonth}일</span>
           </div>
         </section>
       </div>
