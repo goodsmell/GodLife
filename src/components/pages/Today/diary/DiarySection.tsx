@@ -11,8 +11,6 @@ export default function DiarySection({
   dateKey,
   readOnly = false,
 }: DiarySectionProps) {
-  const store = dateKey ? useDayLog(dateKey, { readOnly }) : useTodayGoalLog();
-
   const {
     loading,
     diary,
@@ -20,9 +18,12 @@ export default function DiarySection({
     diaryImages,
     addDiaryImage,
     removeDiaryImage,
-  } = store;
+  } = dateKey ? useDayLog(dateKey, { readOnly }) : useTodayGoalLog();
 
   if (loading) return null;
+
+  const hasDiary = diary.trim().length > 0;
+  const hasImages = diaryImages.length > 0;
 
   const handleImageUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (readOnly) return; // 읽기 전용이면 막기
@@ -39,6 +40,7 @@ export default function DiarySection({
       };
       reader.readAsDataURL(file);
     });
+
     e.target.value = "";
   };
 
@@ -48,26 +50,27 @@ export default function DiarySection({
         오늘의 일기
       </h3>
 
-      {readOnly && !diary && (
-        <h4 className="text-xs text-gray-400">일기를 작성하지 않았어요!</h4>
-      )}
-
-      {!readOnly && (
+      {/* 본문 영역 */}
+      {readOnly ? (
+        hasDiary ? (
+          <div className="mb-3 w-full rounded-sm border border-gray-300 px-3 py-2 text-sm leading-relaxed">
+            <p className="whitespace-pre-wrap text-gray-800">{diary}</p>
+          </div>
+        ) : (
+          <p className="mb-3 text-xs text-gray-400">
+            일기를 작성하지 않았어요!
+          </p>
+        )
+      ) : (
         <textarea
           value={diary}
-          onChange={(e) => !readOnly && setDiary(e.target.value)}
-          readOnly={readOnly}
+          onChange={(e) => setDiary(e.target.value)}
           placeholder="오늘 있었던 일을 자유롭게 적어보세요."
           className="mb-3 h-32 w-full resize-none rounded-lg border border-gray-300 px-3 py-2 text-sm leading-relaxed"
         />
       )}
-      {readOnly && diary && (
-        <div className="mb-3 w-full resize-none rounded-sm border border-gray-300 px-3 py-2 text-sm leading-relaxed">
-          <p className="text-xs text-gray-400">{diary}</p>
-        </div>
-      )}
 
-      {/* 사진 업로드 */}
+      {/* 사진 업로드 버튼 (수정 모드에서만) */}
       {!readOnly && (
         <div className="mb-3">
           <label className="cursor-pointer rounded-lg border border-indigo-300 px-2 py-1 text-xs font-medium text-indigo-600">
@@ -84,7 +87,7 @@ export default function DiarySection({
       )}
 
       {/* 사진 미리보기 */}
-      {diaryImages.length > 0 && (
+      {hasImages && (
         <div className="grid grid-cols-3 gap-2">
           {diaryImages.map((img, index) => (
             <div key={index} className="relative">
@@ -107,8 +110,9 @@ export default function DiarySection({
         </div>
       )}
 
-      {diaryImages.length === 0 && !readOnly && (
-        <p className="text-xs text-gray-400">
+      {/* 사진 안내 문구 (수정 모드 + 사진 없음) */}
+      {!readOnly && !hasImages && (
+        <p className="mt-1 text-xs text-gray-400">
           오늘을 기록하고 싶은 사진을 올려보세요.
         </p>
       )}
