@@ -116,6 +116,21 @@ export default function MonthlyStatsPage() {
     return { data: arr, max };
   }, [monthLogs, daysInMonth]);
 
+  // =============================
+  // 일기 작성 횟수
+  // =============================
+  const diaryStats = useMemo(() => {
+    const daysWithDiary = monthLogs.filter(
+      (log) => !!log.diary && log.diary.trim().length > 0,
+    ).length;
+
+    const totalDays = daysInMonth;
+    const percent =
+      totalDays === 0 ? 0 : Math.round((daysWithDiary / totalDays) * 100);
+
+    return { daysWithDiary, totalDays, percent };
+  }, [monthLogs, daysInMonth]);
+
   if (loading) {
     return (
       <main className="flex min-h-screen flex-col items-center bg-slate-100 px-4 py-6">
@@ -225,6 +240,18 @@ export default function MonthlyStatsPage() {
           <div className="mt-1 flex justify-between text-[10px] text-gray-400">
             <span>1일</span>
             <span>{daysInMonth}일</span>
+          </div>
+        </section>
+        <section className="grid grid-cols-2 gap-3">
+          {/* 일기 */}
+          <div className="rounded-xl bg-white p-3 shadow-sm">
+            <p className="text-xs font-semibold text-gray-700">일기 작성</p>
+            <p className="mt-1 text-lg font-bold text-indigo-600">
+              {diaryStats.daysWithDiary}일
+            </p>
+            <p className="text-[11px] text-gray-500">
+              {diaryStats.totalDays}일 중 {diaryStats.percent}% 작성
+            </p>
           </div>
         </section>
       </div>
